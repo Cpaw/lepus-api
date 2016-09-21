@@ -259,7 +259,7 @@ class AttackPointSerializer(BaseSerializer):
 class NoticeSerializer(BaseSerializer):
     class Meta:
         model = models.Notice
-        fields = ('id', 'title', 'body', 'created_at', 'updated_at')
+        fields = ('id', 'title', 'description', 'priority', 'created_at', 'updated_at')
 
 
 class ConfigSerializer(BaseSerializer):

@@ -60,7 +60,7 @@ class AdminAnswerSerializer(BaseSerializer):
 class AdminNoticeSerializer(BaseSerializer):
     class Meta:
         model = Notice
-        fields = ('id', 'title', 'body', 'is_public', 'created_at', 'updated_at')
+        fields = ('id', 'title', 'description', 'priority', 'is_public', 'created_at', 'updated_at')
         read_only_fields = ('id', 'created_at', 'updated_at')
 
 class AdminYoutubeSerializer(serializers.Serializer):

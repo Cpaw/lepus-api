@@ -180,7 +180,7 @@ class User(AbstractUser, Templete):
     team = models.ForeignKey(Team, verbose_name="チーム", blank=True, null=True)
     seat = models.CharField("座席", max_length=32, blank=True)
     last_score_time = models.DateTimeField("最終得点日時", blank=True, null=True)
-
+    
     objects = UserManager()
 
     def __str__(self):
@@ -280,7 +280,8 @@ class Notice(Templete):
     class Meta:
         ordering = ['created_at']
     title = models.CharField("タイトル", max_length=80)
-    body = models.TextField("本文")
+    description = models.TextField("本文")
+    priority = models.IntegerField(default=0)
     is_public = models.BooleanField("公開にするか", blank=True, default=False)
 
     def __str__(self):
