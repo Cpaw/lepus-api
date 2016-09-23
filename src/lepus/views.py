@@ -51,6 +51,11 @@ class AuthViewSet(viewsets.ViewSet):
     def logout(self, request, *args, **kwargs):
         logout(request)
         return self.list(request, *args, **kwargs)
+        
+
+    def delete(self, request, *args, **kwargs):
+        logout(request)
+        return self.list(request, *args, **kwargs)
 
 
 class UserViewSet(mixins.CreateModelMixin,
