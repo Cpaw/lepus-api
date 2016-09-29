@@ -1,4 +1,9 @@
-# encoding=utf-8
+# -*- coding: utf-8 -*-
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 from django.contrib.auth import authenticate
 from django.conf import settings
 
@@ -109,43 +114,19 @@ class TeamSerializer(BaseSerializer):
 class UserSerializer(BaseSerializer):
     class Meta:
         model = models.User
-        fields = ("id", "username", "password", "team", "points", "last_score_time", "team_name", "team_password", "is_staff")
-        read_only_fields = ("id", "team", "points", "last_score_time", "is_staff")
+        fields = ("id", "username", "email", "password", "points", "last_score_time", "is_staff")
+        read_only_fields = ("id", "points", "last_score_time", "is_staff")
         extra_kwargs = {'password': {'write_only': True}}
-
-    team_name = serializers.CharField(write_only=True, allow_null=False)
-    team_password = serializers.CharField(write_only=True, allow_null=False)
 
     def validate_password(self, value):
         # FIXME:許可するパターンを指定
         return value
 
-    def validate(self, data):
-        team = None
-        try:
-            team = models.Team.objects.get(name=data.get("team_name"))
-            if not team.check_password(data.get("team_password")):
-                raise models.Team.DoesNotExist()
-        except models.Team.DoesNotExist:
-            if team or not settings.ALLOW_CREATE_USER:
-                # パスワード間違い，または，登録が禁止されている場合
-                raise ValidationError(message="Invalid credentials. Team name or password is invalid.", error="INVALID_CREDENTIALS")
-
-        data["team"] = team
-        return data
-
     def create(self, validated_data):
-        team = validated_data["team"]
-        if not team:
-            # チームの作成
-            team = models.Team(name=validated_data["team_name"])
-            team.set_password(validated_data["team_password"])
-            team.save()
-
         # ユーザーの作成とパスワードの設定
         user_data = {
-            "team": team,
-            "username": validated_data["username"]
+            "username": validated_data["username"],
+            "email": validated_data["email"]
         }
         user = models.User(**user_data)
         user.set_password(validated_data["password"])
