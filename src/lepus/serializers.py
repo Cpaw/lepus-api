@@ -114,7 +114,7 @@ class TeamSerializer(BaseSerializer):
 class UserSerializer(BaseSerializer):
     class Meta:
         model = models.User
-        fields = ("id", "username", "email", "password", "points", "last_score_time", "is_staff")
+        fields = ("id", "username", "email", "team", "password", "points", "last_score_time", "is_staff")
         read_only_fields = ("id", "points", "last_score_time", "is_staff")
         extra_kwargs = {'password': {'write_only': True}}
 
@@ -123,8 +123,12 @@ class UserSerializer(BaseSerializer):
         return value
 
     def create(self, validated_data):
+        team = models.Team(name=validated_data["username"])
+        team.set_password(validated_data["password"])
+        team.save()
         # ユーザーの作成とパスワードの設定
         user_data = {
+            "team": team,
             "username": validated_data["username"],
             "email": validated_data["email"]
         }
