@@ -93,7 +93,7 @@ class TeamSerializer(BaseSerializer):
         extra_kwargs = {'password': {'write_only': True, 'required': False}}
 
     def create(self, validated_data):
-        password = validated_data.pop("password", None)
+
         instance = super(TeamSerializer, self).create(validated_data)
         if password:
             instance.set_password(validated_data["password"])
@@ -102,20 +102,12 @@ class TeamSerializer(BaseSerializer):
         instance.save()
         return instance
 
-    def update(self, instance, validated_data):
-        password = validated_data.pop("password", None)
-        instance = super(TeamSerializer, self).update(instance, validated_data)
-        if password:
-            instance.set_password(password)
-            instance.save()
-        return instance
-
 
 class UserSerializer(BaseSerializer):
     class Meta:
         model = models.User
         fields = ("id", "username", "email", "team", "password", "points", "last_score_time", "is_staff")
-        read_only_fields = ("id", "points", "last_score_time", "is_staff")
+        read_only_fields = ("id", "points", "team", "last_score_time", "is_staff")
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate_password(self, value):
