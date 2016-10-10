@@ -157,12 +157,13 @@ class Team(Templete):
             if not question.id in data:
                 data[question.id] = {
                     "id": question.id,
+                    "cat": question.category.id,
                     "flags":0,
                     "points":0
                 }
             data[question.id]["flags"] += 1
             data[question.id]["points"] += answer.flag.point
-
+            
         return data.values()
 
 
